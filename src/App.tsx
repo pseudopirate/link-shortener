@@ -2,6 +2,7 @@ import { Container, createTheme, CssBaseline, ThemeProvider } from '@mui/materia
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import StatisticsPage from './pages/StatisticsPage';
+import ShortenedResultPage from './pages/ShortenedResultPage';
 import { Global } from '@emotion/react';
 import Header from './Header';
 import { Card } from '@mui/material';
@@ -33,6 +34,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Header />}>
                   <Route index element={<MainPage/>} />
+                  <Route path='/shortened/:shortUrl' element={<ShortenedResultPage/>} />
                   <Route path='/statistics/:shortUrl' element={<StatisticsPage/>} />
                 </Route>
                 <Route path='*' element={<MainPage/>} />
