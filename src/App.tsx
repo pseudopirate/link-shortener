@@ -3,6 +3,7 @@ import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import StatisticsPage from './pages/StatisticsPage';
 import ShortenedResultPage from './pages/ShortenedResultPage';
+import LinkNotFoundPage from './pages/LinkNotFoundPage';
 import { Global } from '@emotion/react';
 import Header from './Header';
 import { Card } from '@mui/material';
@@ -36,6 +37,7 @@ function App() {
                   <Route index element={<MainPage/>} />
                   <Route path='/shortened/:shortUrl' element={<ShortenedResultPage/>} />
                   <Route path='/statistics/:shortUrl' element={<StatisticsPage/>} />
+                  <Route path='/not-found' element={<LinkNotFoundPage/>} />
                 </Route>
                 <Route path='*' element={<MainPage/>} />
               </Routes>

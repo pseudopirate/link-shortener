@@ -1,20 +1,15 @@
 import React from 'react';
-import Grid from '@mui/material/Grid';
-import styled from '@emotion/styled';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Link, Snackbar, TextField } from '@mui/material';
+import { Button, Link, Snackbar, TextField, Grid } from '@mui/material';
+import RowContainer from '../components/RowContainer';
 
-const InputContainer = styled(Grid)`
-    padding: 1rem;
-    padding-left: 2rem;
-`
 
 export default function ShortenedResultPage() {
     const {shortUrl} = useParams();
     const navigate = useNavigate();
 
     const [tooltipVisible, setTooltipVisible] = React.useState(false);
-    const url = React.useMemo(() => `${window.location.origin}/${shortUrl}`, [shortUrl]);
+    const url = React.useMemo(() => `${process.env.REACT_APP_LINK_HOST}/l/${shortUrl}`, [shortUrl]);
 
     const handleCopy = React.useCallback(() => {
         navigator.clipboard.writeText(url);
@@ -27,7 +22,7 @@ export default function ShortenedResultPage() {
 
     return (
         <Grid container spacing={2}>
-            <InputContainer item xs={12}>
+            <RowContainer item xs={12}>
                 <TextField
                     variant="standard"
                     label="Your short URL"
@@ -52,10 +47,10 @@ export default function ShortenedResultPage() {
                         </>
                     )}}
                 />
-            </InputContainer>
-            <InputContainer item xs={12}>
+            </RowContainer>
+            <RowContainer item xs={12}>
                 <p>Visit <Link onClick={navigateToStatistics}>statistics page</Link> to view clicks statistics</p>
-            </InputContainer>
+            </RowContainer>
         </Grid>
     )
 }

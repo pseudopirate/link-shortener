@@ -1,13 +1,8 @@
 import React, { ChangeEvent } from 'react';
-import {TextField, Button} from "@mui/material";
-import Grid from '@mui/material/Grid';
-import styled from '@emotion/styled';
+import {TextField, Button, Grid} from "@mui/material";
 import { useNavigate } from 'react-router-dom';
+import RowContainer from '../components/RowContainer';
 
-const InputContainer = styled(Grid)`
-    padding: 1rem;
-    padding-left: 2rem;
-`
 
 export default function MainPage() {
     const [url, setUrl] = React.useState<string>("");
@@ -42,16 +37,24 @@ export default function MainPage() {
             .catch((error: Error) => {
                 setError(error.message);
             })
-    }, [url]);
+    }, [url, navigate]);
+
+    const handleEnterDown = React.useCallback((e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleSubmit()
+        }
+    }, [handleSubmit]);
 
 
     return (
         <Grid container spacing={2}>
-            <InputContainer item xs={12}>
+            <RowContainer item xs={12}>
                 <TextField
                     label="URL"
                     value={url}
                     onChange={handleChange}
+                    onKeyDown={handleEnterDown}
                     fullWidth
                     error={Boolean(error)}
                     helperText={error}
@@ -65,7 +68,7 @@ export default function MainPage() {
                         </Button>
                     )}}
                 />
-            </InputContainer>
+            </RowContainer>
         </Grid>
     )
 }
