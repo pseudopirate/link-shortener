@@ -4,6 +4,21 @@ import { useNavigate } from 'react-router-dom';
 import RowContainer from '../components/RowContainer';
 
 
+// Since we don't have any authentication yet we store all user links in local storage
+// So if user wants to delete it we will check his permissions with local storage help
+function updateMyLinks(shortLink: string) { 
+    const links = window.localStorage.getItem('shortenedLinks');
+
+    if (links) {
+        const parsedLinks = JSON.parse(links) || [];
+
+        window.localStorage.setItem('shortenedLinks', JSON.stringify([...parsedLinks, shortLink]));
+    } else {
+        window.localStorage.setItem('shortenedLinks', JSON.stringify([shortLink]));
+    }
+}
+
+
 export default function MainPage() {
     const [url, setUrl] = React.useState<string>("");
     const [error, setError] = React.useState<string>();
@@ -16,7 +31,7 @@ export default function MainPage() {
     const handleSubmit = React.useCallback(() => {
         setError(undefined);
 
-        window.fetch('/link', {
+        window.fetch('/api/link', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -32,7 +47,9 @@ export default function MainPage() {
                 }    
             })
             .then(({shortenedLink}) => {
-                navigate(`/shortened/${shortenedLink}`)
+                
+                updateMyLinks(shortenedLink);
+                navigate(`/shortened/${shortenedLink}`);
             })
             .catch((error: Error) => {
                 setError(error.message);

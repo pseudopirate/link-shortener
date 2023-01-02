@@ -47,3 +47,24 @@ export function closeConnection(db: Sqlite3.Database = database) {
 export function createShortLinkVisitStatement(db: Sqlite3.Database = database) {
     return db.prepare('INSERT INTO statistics (shortLink) VALUES (@shortLink)');
 }
+
+
+export function listShortLinkVisitsStatement(db: Sqlite3.Database = database) {
+    return db.prepare('SELECT * FROM statistics WHERE shortLink = ?');
+}
+
+function deleteShortLinkStatement(db: Sqlite3.Database = database) {
+    return db.prepare('DELETE FROM short_links WHERE shortLink = ?');
+}
+
+function deleteShortVisitsStatement(db: Sqlite3.Database = database) {
+    return db.prepare('DELETE FROM statistics WHERE shortLink = ?');
+}
+
+export function deleteShortLink(shortLink: string, db: Sqlite3.Database = database) {
+    return db.transaction(() => {
+        deleteShortVisitsStatement().run(shortLink);
+        deleteShortLinkStatement().run(shortLink);
+    });
+}
+

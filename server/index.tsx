@@ -1,7 +1,9 @@
 import express, {NextFunction, Request, Response} from 'express';
-import { getShortLinksStatement, createShortLinkVisitStatement } from './db';
+import {
+    getShortLinksStatement, createShortLinkVisitStatement, listShortLinkVisitsStatement, deleteShortLink,
+} from './db';
 import { shortenLink } from './shortener';
-import { LinkPostRequest } from './types';
+import { LinkDeleteRequest, LinkPostRequest } from './types';
 import {validateUrl} from './validate';
 
 const PORT = process.env.PORT || 5000;
@@ -14,12 +16,19 @@ app.get('/ping', (__, res) => {
 
 app.use(express.json());
 
-app.post('/link', validateUrl, async (req: Request<unknown, LinkPostRequest>, res: Response) => {
+app.post('/api/link', validateUrl, (req: Request<unknown, LinkPostRequest>, res: Response) => {
     const shortenedLink = shortenLink(req.body.url);
 
     res.json({
         shortenedLink,
     });
+});
+
+app.delete('/api/link', (req: Request<unknown, LinkDeleteRequest>, res: Response) => {
+    const shortenedLink = req.body.url;
+    deleteShortLink(shortenedLink)();
+
+    res.sendStatus(204);
 });
 
 app.get('/l/:link', (req: Request, res: Response) => {
@@ -35,6 +44,12 @@ app.get('/l/:link', (req: Request, res: Response) => {
     } else {
         res.redirect(307, 'http://localhost:3000/not-found');
     }
+});
+
+app.get('/api/statistics', (req, res: Response) => {
+    const {shortUrl} = req.query;
+    const visits = listShortLinkVisitsStatement().all(shortUrl) || [];
+    res.json(visits);
 });
 
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
