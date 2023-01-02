@@ -2,10 +2,10 @@ import { createShortLinkStatement, listShortLinksStatement } from "./db";
 import randomstring from 'randomstring';
 
 export function getUniqueLink(existingLinks: string[]) {
-    let shortLink = randomstring.generate(7);
+    let shortLink = randomstring.generate(6);
 
     while (existingLinks.includes(shortLink)) {
-        shortLink = randomstring.generate(7);
+        shortLink = randomstring.generate(6);
     }
 
     return shortLink;

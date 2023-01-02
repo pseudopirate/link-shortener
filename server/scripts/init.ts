@@ -1,10 +1,8 @@
-import { getCreateDatabaseStatement } from "../db";
+import { createTables, closeConnection } from "../db";
 
 function create() {
-    const createDatabase = getCreateDatabaseStatement()
-
-    const raw = createDatabase.run();
-
+    const raw = createTables();
+    closeConnection()
     console.log('Database created ', raw);
 
 }
